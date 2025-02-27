@@ -1,0 +1,5 @@
+nats-py
+psycopg2-binary
+numpy
+scikit-learn
+openai

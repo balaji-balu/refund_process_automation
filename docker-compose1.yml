@@ -1,0 +1,48 @@
+services:
+  agent:
+    build: ./aiagent
+    depends_on:
+      - nats
+    environment:
+      POSTGRES_DB: refunddb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+
+  telegram_bot:
+    build: ./telegram_bot
+    depends_on:
+      - nats
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      NATS_SERVER: ${NATS_SERVER}
+
+  nats:
+    image: nats:latest
+    container_name: nats-server
+    ports:
+      - "4222:4222"   # Client connections
+      - "6222:6222"   # Cluster connections
+      - "8222:8222"   # Monitoring endpoint
+
+  postgres:
+    image: postgres:15
+    container_name: refund-db
+    restart: always
+    environment:
+      POSTGRES_DB: refunddb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./tests/create_users.sql:/docker-entrypoint-initdb.d/create_users.sql
+
+networks:
+  backend:
+
+volumes:
+  pgdata:

@@ -42,6 +42,13 @@ This project consists of multiple microservices working together using Docker an
 - **NATS Server**: Message broker for inter-service communication.
 - **PostgreSQL Database**: Stores refund-related data.
 
+### AI agent
+- Fetches historical refund data.
+- Uses Z-Score and Isolation Forest to detect anomalies in refund requests.
+- Calls OpenAI's GPT-4 API for AI-based fraud analysis.
+- Makes final refund decisions based on ML and AI results.
+- Communicates results via NATS messaging.
+
 ## Usage
 - Access the Refund API at `http://localhost:8080`
 - Monitor NATS at `http://localhost:8222`

@@ -9,6 +9,17 @@ services:
       POSTGRES_PASSWORD: password
       OPENAI_API_KEY: ${OPENAI_API_KEY}
 
+  refund_api:
+    build: ./refund_api
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    # depends_on:
+    #   - ai_agent
+    environment:
+      DATABASE_URL: "postgres://user:password@postgres:5432/refunddb?sslmode=disable"
+
   telegram_bot:
     build: ./telegram_bot
     depends_on:
